@@ -1,0 +1,25 @@
+---
+- name: install pre-requisites
+  package: name=curl
+
+- name: create nix group
+  group: name=nix
+
+- name: create a nix user
+  user: name=nix group=nix home=/var/lib/nix
+
+- name: create /nix
+  file: path=/nix state=directory owner=nix group=nix
+
+- name: download nix install script
+  get_url:
+    url: https://nixos.org/nix/install
+    dest: /usr/local/bin/install-nix.sh
+    mode: 0755
+
+- name: execute install script
+  command: /usr/local/bin/install-nix.sh
+  become: true
+  become_user: nix
+  args:
+    creates: /var/lib/nix/.nix-profile/etc/profile.d/nix.sh

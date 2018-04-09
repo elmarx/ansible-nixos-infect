@@ -1,0 +1,25 @@
+---
+- name: install nixos-tools
+  become: true
+  become_user: nix
+  script: "files/prepare-nixos.sh {{ nixos_release }}"
+  args:
+    creates: /var/lib/nix/.nix-profile/bin/nixos-generate-config
+
+- name: create nixos directory
+  file: path=/etc/nixos state=directory
+
+- name: install configuration.nix
+  template: src=configuration.nix.j2 dest=/etc/nixos/configuration.nix
+
+- name: generate nixos hardware-configuration
+  command: /var/lib/nix/.nix-profile/bin/nixos-generate-config
+  args:
+    creates: /etc/nixos/hardware-configuration.nix
+
+- name: build the nixos system profile
+  become: true
+  become_user: nix
+  script: files/build-nixos.sh
+  args:
+     creates: /nix/var/nix/profiles/system

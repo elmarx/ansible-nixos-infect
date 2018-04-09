@@ -1,0 +1,6 @@
+---
+- import_tasks: nix.yml
+
+- import_tasks: nixos.yml
+
+- import_tasks: lustrate.yml

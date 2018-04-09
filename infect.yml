@@ -1,0 +1,9 @@
+#!/usr/bin/env ansible-playbook
+---
+- hosts: all
+  become: true
+  roles:
+    - role: nixos-infect
+      when: ansible_os_family == "Debian"
+  pre_tasks:
+    - package: name=acl

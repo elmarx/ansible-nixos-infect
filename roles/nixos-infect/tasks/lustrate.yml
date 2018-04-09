@@ -1,0 +1,15 @@
+---
+- name: install the NIXOS_LUSTRATE file
+  copy: src=NIXOS_LUSTRATE dest=/etc/NIXOS_LUSTRATE
+
+- name: tell the nixos-bootprocess this is an official NIXOS partition now
+  copy: content="" dest=/etc/NIXOS
+
+- name: chown of /nix to root
+  file: path=/nix owner=root group=root recurse=yes
+
+- name: remove /boot
+  file: path=/boot state=absent
+
+- name: install nixos bootmanager
+  command: /nix/var/nix/profiles/system/bin/switch-to-configuration boot
